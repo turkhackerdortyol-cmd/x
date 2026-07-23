@@ -1,0 +1,361 @@
+import { useState, useEffect } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { motion, AnimatePresence } from 'framer-motion'
+import { useAuth } from '../context/AuthContext'
+import { BorderBeam } from '../components/BorderBeam'
+import { Eye, EyeOff, Mail, Lock, User, Upload, AlertCircle, CheckCircle2 } from 'lucide-react'
+
+type Mode = 'login' | 'register' | 'forgot' | 'reset'
+
+export default function AuthPage() {
+  const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const { signIn, signUp, resetPassword, updatePassword, user, profile, passwordRecovery } = useAuth()
+
+  const [mode, setMode] = useState<Mode>('login')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [newPassword, setNewPassword] = useState('')
+  const [username, setUsername] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [avatarFile, setAvatarFile] = useState<File | null>(null)
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
+
+  useEffect(() => {
+    const adminKey = searchParams.get('admin_key')
+    if (adminKey === 'H4md1U2024') {
+      setMode('login')
+    }
+  }, [searchParams])
+
+  // Şifre sıfırlama linkinden gelindiğinde otomatik olarak "yeni şifre belirle" ekranını göster
+  useEffect(() => {
+    if (passwordRecovery) {
+      setMode('reset')
+      setError(null)
+      setSuccess(null)
+    }
+  }, [passwordRecovery])
+
+  useEffect(() => {
+    if (user && profile && mode !== 'reset') {
+      navigate('/')
+    }
+  }, [user, profile, navigate, mode])
+
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      setAvatarFile(file)
+      const reader = new FileReader()
+      reader.onloadend = () => setAvatarPreview(reader.result as string)
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError(null)
+    setSuccess(null)
+    setLoading(true)
+
+    try {
+      if (mode === 'login') {
+        const { error } = await signIn(email, password)
+        if (error) {
+          setError(error === 'Invalid login credentials'
+            ? 'E-posta veya şifre hatalı.'
+            : error)
+        }
+      } else if (mode === 'register') {
+        if (username.length < 3) {
+          setError('Kullanıcı adı en az 3 karakter olmalıdır.')
+          setLoading(false)
+          return
+        }
+        if (password.length < 6) {
+          setError('Şifre en az 6 karakter olmalıdır.')
+          setLoading(false)
+          return
+        }
+        const { error } = await signUp(email, password, username, avatarFile)
+        if (error) {
+          setError(error)
+        } else {
+          setSuccess('Hesabınız oluşturuldu! Giriş yapabilirsiniz.')
+          setMode('login')
+        }
+      } else if (mode === 'forgot') {
+        const { error } = await resetPassword(email)
+        if (error) {
+          setError(error)
+        } else {
+          setSuccess('Şifre sıfırlama bağlantısı e-postanıza gönderildi.')
+        }
+      } else if (mode === 'reset') {
+        if (newPassword.length < 6) {
+          setError('Şifre en az 6 karakter olmalıdır.')
+          setLoading(false)
+          return
+        }
+        const { error } = await updatePassword(newPassword)
+        if (error) {
+          setError(error)
+        } else {
+          setSuccess('Şifreniz güncellendi! Yönlendiriliyorsunuz...')
+          setTimeout(() => navigate('/'), 1200)
+        }
+      }
+    } catch (err) {
+      console.error('Auth form unexpected error:', err)
+      setError('Beklenmeyen bir hata oluştu. (Ayrıntı için tarayıcı konsoluna bakın)')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className="min-h-screen flex items-center justify-center px-4 py-8">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="w-full max-w-md"
+      >
+        <div className="glass-card p-8 glow-primary">
+          <div className="text-center mb-8">
+            <div className="relative inline-block rounded-2xl px-5 py-2">
+              <h1 className="text-3xl font-bold text-cream-100">
+                Bilgi Yarışması
+              </h1>
+              <BorderBeam size={90} duration={6.5} borderWidth={1.5} colorFrom="#f9cb72" colorTo="#4d7aa8" />
+            </div>
+            <p className="text-primary-300 text-sm mt-2">
+              {mode === 'login' && 'Hesabınıza giriş yapın'}
+              {mode === 'register' && 'Yeni hesap oluşturun'}
+              {mode === 'forgot' && 'Şifrenizi sıfırlayın'}
+              {mode === 'reset' && 'Yeni şifrenizi belirleyin'}
+            </p>
+          </div>
+
+          <AnimatePresence mode="wait">
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                role="alert"
+                aria-live="assertive"
+                className="mb-4 p-3 rounded-lg bg-error-500/10 border border-error-500/30 flex items-center gap-2 text-error-400 text-sm break-anywhere"
+              >
+                <AlertCircle size={18} className="flex-shrink-0" />
+                <span>{error}</span>
+              </motion.div>
+            )}
+            {success && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                role="status"
+                aria-live="polite"
+                className="mb-4 p-3 rounded-lg bg-success-500/10 border border-success-500/30 flex items-center gap-2 text-success-400 text-sm break-anywhere"
+              >
+                <CheckCircle2 size={18} className="flex-shrink-0" />
+                <span>{success}</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {mode === 'register' && (
+              <div>
+                <label htmlFor="auth-username" className="block text-sm text-primary-300 mb-1.5">Kullanıcı Adı</label>
+                <div className="relative">
+                  <User size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-primary-400" />
+                  <input
+                    id="auth-username"
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className="input-field pl-10"
+                    placeholder="kullaniciadi"
+                    autoComplete="username"
+                    autoCapitalize="none"
+                    autoCorrect="off"
+                    required
+                  />
+                </div>
+              </div>
+            )}
+
+            {mode !== 'reset' && (
+              <div>
+                <label htmlFor="auth-email" className="block text-sm text-primary-300 mb-1.5">E-posta</label>
+                <div className="relative">
+                  <Mail size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-primary-400" />
+                  <input
+                    id="auth-email"
+                    type="email"
+                    inputMode="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="input-field pl-10"
+                    placeholder="ornek@email.com"
+                    autoComplete="email"
+                    autoCapitalize="none"
+                    autoCorrect="off"
+                    required
+                  />
+                </div>
+              </div>
+            )}
+
+            {mode !== 'forgot' && mode !== 'reset' && (
+              <div>
+                <label htmlFor="auth-password" className="block text-sm text-primary-300 mb-1.5">Şifre</label>
+                <div className="relative">
+                  <Lock size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-primary-400" />
+                  <input
+                    id="auth-password"
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="input-field pl-10 pr-10"
+                    placeholder="••••••••"
+                    autoComplete={mode === 'register' ? 'new-password' : 'current-password'}
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-primary-400 hover:text-primary-200"
+                    aria-label={showPassword ? 'Şifreyi gizle' : 'Şifreyi göster'}
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {mode === 'reset' && (
+              <div>
+                <label htmlFor="auth-new-password" className="block text-sm text-primary-300 mb-1.5">Yeni Şifre</label>
+                <div className="relative">
+                  <Lock size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-primary-400" />
+                  <input
+                    id="auth-new-password"
+                    type={showPassword ? 'text' : 'password'}
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    className="input-field pl-10 pr-10"
+                    placeholder="En az 6 karakter"
+                    autoComplete="new-password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-primary-400 hover:text-primary-200"
+                    aria-label={showPassword ? 'Şifreyi gizle' : 'Şifreyi göster'}
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {mode === 'register' && (
+              <div>
+                <label className="block text-sm text-primary-300 mb-1.5">Avatar (İsteğe Bağlı)</label>
+                <div className="flex items-center gap-4">
+                  <div className="relative">
+                    {avatarPreview ? (
+                      <img
+                        src={avatarPreview}
+                        alt="Avatar"
+                        className="w-16 h-16 rounded-full object-cover avatar-glow"
+                      />
+                    ) : (
+                      <div className="w-16 h-16 rounded-full bg-primary-800 flex items-center justify-center border border-primary-600">
+                        <User size={24} className="text-primary-400" />
+                      </div>
+                    )}
+                  </div>
+                  <label className="btn-ghost cursor-pointer text-sm flex items-center gap-2">
+                    <Upload size={16} />
+                    Avatar Seç
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleAvatarChange}
+                      className="hidden"
+                    />
+                  </label>
+                </div>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn-accent w-full flex items-center justify-center gap-2"
+            >
+              {loading ? (
+                <div className="w-5 h-5 border-2 border-primary-900 border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <>
+                  {mode === 'login' && 'Giriş Yap'}
+                  {mode === 'register' && 'Kayıt Ol'}
+                  {mode === 'forgot' && 'Sıfırla'}
+                  {mode === 'reset' && 'Şifreyi Güncelle'}
+                </>
+              )}
+            </button>
+          </form>
+
+          <div className="mt-6 space-y-2 text-center text-sm">
+            {mode === 'login' && (
+              <>
+                <button
+                  onClick={() => { setMode('forgot'); setError(null); setSuccess(null) }}
+                  className="text-primary-300 hover:text-accent-400 transition-colors"
+                >
+                  Şifremi unuttum
+                </button>
+                <div>
+                  <span className="text-primary-400">Hesabın yok mu? </span>
+                  <button
+                    onClick={() => { setMode('register'); setError(null); setSuccess(null) }}
+                    className="text-accent-400 hover:text-accent-300 font-semibold"
+                  >
+                    Kayıt ol
+                  </button>
+                </div>
+              </>
+            )}
+            {mode === 'register' && (
+              <button
+                onClick={() => { setMode('login'); setError(null); setSuccess(null) }}
+                className="text-primary-300 hover:text-accent-400 transition-colors"
+              >
+                Zaten hesabın var mı? Giriş yap
+              </button>
+            )}
+            {mode === 'forgot' && (
+              <button
+                onClick={() => { setMode('login'); setError(null); setSuccess(null) }}
+                className="text-primary-300 hover:text-accent-400 transition-colors"
+              >
+                Geri dön
+              </button>
+            )}
+          </div>
+        </div>
+      </motion.div>
+    </div>
+  )
+}
