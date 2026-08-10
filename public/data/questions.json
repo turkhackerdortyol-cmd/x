@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-08-10T13:24:57.126Z",
-  "total": 4116,
+  "generated_at": "2026-08-10T19:07:39.243Z",
+  "total": 4121,
   "questions": [
     {
       "id": "genel-kultur-kolay-1784815684982-tyn3xq64",
@@ -65857,6 +65857,86 @@
       "source_title": "Karkar Nehri",
       "is_active": true,
       "created_at": "2026-08-10T13:24:37.525Z"
+    },
+    {
+      "id": "cografya-kolay-1786388652670-di7o39vf",
+      "category": "cografya",
+      "difficulty": "kolay",
+      "question_text": "Karadeniz Bölgesi ile ilgili aşağıdakilerden hangisi doğrudur?",
+      "option_a": "Batı Karadeniz Bölgesi Türkiye'nin İBBS'sinin 12 istatistiki bölgesinden birisidir.",
+      "option_b": "Karadeniz Ereğli, Zonguldak il sınırları içinde bulunan bir ilçedir.",
+      "option_c": "Karadeniz Bölgesi, Bulgaristan'ın tüm doğu sınırını kaplayan bölgesidir.",
+      "option_d": "Gürcistan, Doğu Anadolu Bölgesi, İç Anadolu Bölgesi, Marmara Bölgesi ve adını aldığı deniz ile komşudur.",
+      "correct_answer": "D",
+      "explanation": "Bu bilgi, Wikipedia kaynağından derlenmiştir.",
+      "source_url": "https://tr.wikipedia.org/wiki/Karadeniz_B%C3%B6lgesi",
+      "source_title": "Karadeniz Bölgesi",
+      "is_active": true,
+      "created_at": "2026-08-10T19:04:12.670Z"
+    },
+    {
+      "id": "fen-profesyonel-1786388706804-n7p4nrf2",
+      "category": "fen",
+      "difficulty": "profesyonel",
+      "question_text": "Avogadro sayısı ile ilgili aşağıdakilerden hangisi doğrudur?",
+      "option_a": "Sayı, bu alandaki katkılarından dolayı İtalyan bir bilim insanı Amedeo Avogadro'nun adı ile anılır.",
+      "option_b": "Coulomb, Elektrik yükü birimi olup simgesi: C dir.",
+      "option_c": "Quaregna ve Cerrato Kontu Lorenzo Romano Amedeo Carlo Avogadro, İtalyan kimyager ve bilim insanıdır.",
+      "option_d": "Avogadro sayısı kadar atom ya da molekül içeren maddeye 1 mol denir.",
+      "correct_answer": "A",
+      "explanation": "Bu bilgi, Wikipedia kaynağından derlenmiştir.",
+      "source_url": "https://tr.wikipedia.org/wiki/Avogadro_say%C4%B1s%C4%B1",
+      "source_title": "Avogadro sayısı",
+      "is_active": true,
+      "created_at": "2026-08-10T19:05:06.804Z"
+    },
+    {
+      "id": "lgs-kolay-1786388770035-to5csbga",
+      "category": "lgs",
+      "difficulty": "kolay",
+      "question_text": "Hücre bölünmesi ile ilgili aşağıdakilerden hangisi doğrudur?",
+      "option_a": "Hücre döngüsü, bir hücrenin ömrü boyunca meydana gelen olayların sırasını ifade eder.",
+      "option_b": "Bir hücrenin bölünebilmesi için belirli bir büyüklüğe ulaşması ve nükleik asitlere sahip olması gerekmektedir.",
+      "option_c": "G1 Evresi, hücre bölünmesinde görülen bir evre.",
+      "option_d": "Asimetrik hücre bölünmesi; farklı hücre kaderlerine sahip olan iki kardeş hücreyle sonuçlanan bir bölünme şeklidir.",
+      "correct_answer": "B",
+      "explanation": "Bu bilgi, Wikipedia kaynağından derlenmiştir.",
+      "source_url": "https://tr.wikipedia.org/wiki/H%C3%BCcre_b%C3%B6l%C3%BCnmesi",
+      "source_title": "Hücre bölünmesi",
+      "is_active": true,
+      "created_at": "2026-08-10T19:06:10.035Z"
+    },
+    {
+      "id": "karisik-profesyonel-1786388835996-eqs7qgup",
+      "category": "karisik",
+      "difficulty": "profesyonel",
+      "question_text": "Firar (dizi) ile ilgili aşağıdakilerden hangisi doğrudur?",
+      "option_a": "Gülsüm Kamu, tanındığı diğer adıyla Mine Gülsüm, doğum adıyla Emine Gülsüm Kefeli, Türk tiyatro, sinema ve dizi oyuncusudur.",
+      "option_b": "Dizi, 35. bölümü ile final yaparak sona erdi.",
+      "option_c": "Nilgün Karababa, Türk tiyatro, sinema ve dizi oyuncusu, seslendirme sanatçısıdır.",
+      "option_d": "Ece Çeşmioğlu Ölmez, Türk oyuncudur.",
+      "correct_answer": "B",
+      "explanation": "Bu bilgi, Wikipedia kaynağından derlenmiştir.",
+      "source_url": "https://tr.wikipedia.org/wiki/Firar_(dizi)",
+      "source_title": "Firar (dizi)",
+      "is_active": true,
+      "created_at": "2026-08-10T19:07:15.996Z"
+    },
+    {
+      "id": "karisik-cok_zor-1786388845935-01ia0wjt",
+      "category": "karisik",
+      "difficulty": "cok_zor",
+      "question_text": "Yunus Emre hakkında verilen bilgilerden hangisi doğrudur?",
+      "option_a": "Yunus Emre hakkında biyografik bilgi veren velayetnameler ile manzum şiirler dışında temel kaynak bulunmamaktadır.",
+      "option_b": "Yunus Emre Türbesi veya mezarı olduğu iddia edilen çok sayıda yer vardır.",
+      "option_c": "Yunus Emre, İzmir ilinin Bornova ilçesine bağlı bir merkez mahalledir.",
+      "option_d": "Tapduk Emre 13. yüzyılda yaşamış bir Türkmen dervişi ve Yunus Emre'nin mürşidi ve öğretmenidir.",
+      "correct_answer": "A",
+      "explanation": "Bu bilgi, Wikipedia kaynağından derlenmiştir.",
+      "source_url": "https://tr.wikipedia.org/wiki/Yunus_Emre",
+      "source_title": "Yunus Emre",
+      "is_active": true,
+      "created_at": "2026-08-10T19:07:25.935Z"
     }
   ]
 }
